@@ -1,0 +1,14 @@
+{
+  "name": "omi-webhook",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "OMI Glass webhook integration for Jack AI",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "express": "^4.21.0"
+  }
+}
