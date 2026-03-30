@@ -54,6 +54,13 @@ const JACK_SYSTEM = `You are **Jack**, a personal AI assistant worn as glasses (
 const recentTranscripts = []; // last N transcripts for context
 const MAX_CONTEXT = 10;
 
+// ── Log ALL requests (debug) ────────────────────────────────────────────────
+
+app.use('/api/omi', (req, res, next) => {
+  console.log(`📥 ${req.method} ${req.originalUrl} — Body: ${JSON.stringify(req.body).slice(0, 200)}`);
+  next();
+});
+
 // ── Health check ────────────────────────────────────────────────────────────
 
 app.get('/api/omi/health', (req, res) => {
@@ -182,16 +189,12 @@ async function sendOmiNotification(uid, message) {
   }
 
   try {
-    const res = await fetch(`https://api.omi.me/v2/integrations/${OMI_APP_ID}/notification`, {
+    const params = new URLSearchParams({ uid, message: message.slice(0, 1000) });
+    const res = await fetch(`https://api.omi.me/v2/integrations/${OMI_APP_ID}/notification?${params}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${OMI_APP_SECRET}`,
       },
-      body: JSON.stringify({
-        uid,
-        message,
-      }),
       signal: AbortSignal.timeout(10000),
     });
 
